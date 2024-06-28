@@ -1,3 +1,0 @@
-C:/Users/kaget/Documents/repos/cmake/build/CMakeFiles/TST.dir
-C:/Users/kaget/Documents/repos/cmake/build/CMakeFiles/edit_cache.dir
-C:/Users/kaget/Documents/repos/cmake/build/CMakeFiles/rebuild_cache.dir
