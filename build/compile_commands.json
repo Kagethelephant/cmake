@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/kaget/Documents/repos/cmake/build",
+  "command": "C:\\PROGRA~1\\MICROS~2\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1438~1.331\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DSFML_STATIC -IC:\\Users\\kaget\\Documents\\repos\\cmake\\include -external:IC:\\Users\\kaget\\Documents\\repos\\cmake\\include\\SFML-MSVC\\include -external:W0 /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi /FoCMakeFiles\\TST.dir\\main.cpp.obj /FdCMakeFiles\\TST.dir/ /FS -c C:\\Users\\kaget\\Documents\\repos\\cmake\\main.cpp",
+  "file": "C:/Users/kaget/Documents/repos/cmake/main.cpp",
+  "output": "CMakeFiles/TST.dir/main.cpp.obj"
+}
+]
