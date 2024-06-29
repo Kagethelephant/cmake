@@ -12,7 +12,7 @@ set(SOURCE_FILES
 
 add_executable(${PROJECT_NAME} main.cpp)
 
-# Display the compiler being used
+# This is the master change
 #Message(${CMAKE_CXX_COMPILER_ID})
 
 # Include other header files
