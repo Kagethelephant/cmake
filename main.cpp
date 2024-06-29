@@ -7,7 +7,6 @@ int main()
 {
 
     int var = add(2,3);
-    std::cout << var << " is the number" << std::endl;
 
 
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
