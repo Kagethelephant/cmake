@@ -13,15 +13,6 @@ int main()
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 
-
-    if(window.isOpen())
-    {
-        std::cout << "window is something?" << std::endl;
-    }
-    else
-    {
-        std::cout << "window is nothing?" << std::endl;
-    }
     while (window.isOpen())
     {
         sf::Event event;
