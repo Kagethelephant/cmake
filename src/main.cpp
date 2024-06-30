@@ -5,65 +5,43 @@
 
 
 //create the grid here so it stays in the heap
-float dsMap[G_mapAlloc][G_mapAlloc];
 
-static const int mapSize = 500;
+int main() {
 
-int main(int argc, char** argv) {
+    //size of diamond square map *MUST BE EVEN*
+    static const int mapSize = 200;
 
-
-    //define some colors cause the default ones are ugly
-    sf::Vector3i c_black(13, 14, 26);
-    sf::Vector3i c_dkblue(33, 47, 106);
-    sf::Vector3i c_blue(47, 80, 118);
-    sf::Vector3i c_ltblue(65, 95, 120);
-    sf::Vector3i c_tan(116, 113, 89);
-    sf::Vector3i c_green(49, 83, 76);
-    sf::Vector3i c_dkgreen(34, 53, 59);
-    sf::Vector3i c_dkpurple(43, 37, 49);
-    sf::Vector3i c_purple(77, 61, 85);
-    sf::Vector3i c_snow(182, 182, 182);
-
+    //Create the diamond square object and run function to generate map
+    Map ds(mapSize);
+    ds.newMap();
+    //ds.sortMapValue();
+    // 
     //----GRID VARIABLES----
+
+    sf::Vector2f mousePos;
+    sf::Vector2i mouseGrid;
+
+    //start position for the view
+    sf::Vector2i viewGrid;
+    viewGrid.x = 45;
+    viewGrid.y = -5;
 
     //size in pixels of the grids to draw to the window
     sf::Vector2i tileSize;
     tileSize.x = 32;
     tileSize.y = 16;
 
-    //size of diamond square map *MUST BE EVEN*
-    sf::Vector2f mousePos;
-    sf::Vector2i mouseGrid;
-    sf::Vector2i viewPos;
-
-    //start position for the view
-    viewPos.x = 50;
-    viewPos.y = -10;
-
-
-    //Create the diamond square object and run function to generate map
-    Map ds(mapSize);
-    ds.newMap(dsMap);
-
-
+    
 
 
     //----VIEW SETUP/SFML----
 
     //only window view for the game
     sf::RenderWindow window; 
-    sf::View view;
 
     //container for the height and width of the window
     sf::Vector2i resPixels;
-    resPixels = windowSetup(window, view, 600, true,30);
-
-    //how many grids can fit on the screen
-    sf::Vector2i resTiles;
-    resTiles.x = ceil(resPixels.x / tileSize.x)*2;
-    resTiles.y = ceil(resPixels.y / tileSize.y);
-
-
+    resPixels = windowSetup(window, 500, true,30);
 
 
     //create the buffers and sprites used to draw the map and gui
@@ -73,10 +51,9 @@ int main(int argc, char** argv) {
     bufferMap.create(resPixels.x, resPixels.y);
     bufferGUI.create(resPixels.x, resPixels.y);
 
-    sf::Sprite bufferSpriteMap(bufferMap.getTexture());
-    sf::Sprite bufferSpriteGUI(bufferGUI.getTexture());
 
-
+     
+    Canvas canvas(resPixels.x, resPixels.y);
 
 
     //----GLYPHS----
@@ -90,14 +67,14 @@ int main(int argc, char** argv) {
     textSmall.setFont(fontSmall);
     textSmall.setString("Hello world");
     textSmall.setCharacterSize(8);
-    textSmall.setFillColor(sf::Color(c_snow.x, c_snow.y, c_snow.z));
+    textSmall.setFillColor(sf::Color(G_white_x, G_white_y, G_white_z));
     textSmall.setStyle(sf::Text::Regular);
     textSmall.setPosition(5, 5);
 
     //rectangles to draw the grids
     sf::RectangleShape rectCursor;
     rectCursor.setSize(sf::Vector2f(3,3));
-    rectCursor.setFillColor(sf::Color::White);
+    rectCursor.setFillColor(sf::Color(G_white_x, G_white_y, G_white_z));
     rectCursor.setOutlineColor(sf::Color::Transparent);
     rectCursor.setOutlineThickness(2);
     rectCursor.setOrigin(1, 1);
@@ -110,15 +87,25 @@ int main(int argc, char** argv) {
 
 
 
+
+
     //----DRAW STATIC----
 
+    sf::RectangleShape testRect;
+    testRect.setSize(sf::Vector2f(10, 10));
+    testRect.setFillColor(sf::Color(G_white_x, G_white_y, G_white_z));
+    testRect.setOutlineColor(sf::Color::Transparent);
+    testRect.setOutlineThickness(2);
+    testRect.setOrigin(5, 5);
+    testRect.setPosition(20, 20);
 
-    //clear viewwith a background color
-    bufferMap.clear(sf::Color(c_black.x, c_black.y, c_black.z));
-    //draw the map with vertex array
-    ds.drawMap(bufferMap, dsMap, tileSize, viewPos, resTiles);
-
-
+    sf::RectangleShape testRect2;
+    testRect2.setSize(sf::Vector2f(10, 10));
+    testRect2.setFillColor(sf::Color(G_black_x, G_black_y, G_black_z));
+    testRect2.setOutlineColor(sf::Color::Transparent);
+    testRect2.setOutlineThickness(2);
+    testRect2.setOrigin(5, 5);
+    testRect2.setPosition(25, 25);
 
 
     //----MAIN LOOP----
@@ -153,25 +140,18 @@ int main(int argc, char** argv) {
         //----UPDATE----
 
         // regenerate the map when the enter button is pressed
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) ds.newMap(dsMap, mapSize);
-
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+        {
+            ds.newMap();
+            //ds.sortMapValue();
+        }
 
         //move the map around and update the graphics
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) viewPos.x += 1;
+        viewGrid.x += sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+        viewGrid.y += sf::Keyboard::isKeyPressed(sf::Keyboard::Down) - sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
 
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) viewPos.x -= 1;
-
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) viewPos.y -= 1;
-
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) viewPos.y += 1;
-
-        bufferMap.clear(sf::Color(c_black.x, c_black.y, c_black.z));
-        ds.drawMap(bufferMap, dsMap, tileSize, viewPos, resTiles);
-
-
+      
 
 
         //----UPDATE MAKE CALCULATIONS-----     
@@ -185,11 +165,11 @@ int main(int argc, char** argv) {
         mouseGrid.x = round(((mousePos.x * c) / tileSize.x) - (mousePos.y * c / tileSize.y));
         mouseGrid.y = round((mousePos.y * c) / tileSize.y + (mousePos.x * c) / tileSize.x);
 
-        int gridX = viewPos.x + floor(mouseGrid.x / c);
-        int gridY = viewPos.y + floor(mouseGrid.y / c);
+        int gridX = viewGrid.x + floor(mouseGrid.x / c);
+        int gridY = viewGrid.y + floor(mouseGrid.y / c);
 
-        int winX = (gridX-viewPos.x) * 16 + (gridY - viewPos.y) * 16;
-        int winY = (gridY - viewPos.y) * 8 - (gridX - viewPos.x) * 8;
+        int winX = (gridX-viewGrid.x) * 16 + (gridY - viewGrid.y) * 16;
+        int winY = (gridY - viewGrid.y) * 8 - (gridX - viewGrid.x) * 8 + 8;
 
         if (gridX > mapSize - 1) gridX = mapSize - 1;
         if (gridY > mapSize - 1) gridY = mapSize - 1;
@@ -199,50 +179,65 @@ int main(int argc, char** argv) {
 
 
 
+        //clear view with a background color
+        bufferMap.clear(sf::Color(G_black_x, G_black_y, G_black_z));
+        //draw the map with vertex array
+        ds.drawMap(bufferMap, tileSize, viewGrid, "../sprites/testTileset.png");
+        ds.drawMiniMap(bufferMap, mapSize,sf::Vector2i(gridX,gridY));
+
+
+
         //----DRAW UPDATE-----
       
         //clear the view transparent so it doesnt cover up the main buffer!
-        bufferGUI.clear(sf::Color::Transparent);
+        //bufferGUI.clear(sf::Color::Transparent);
 
-        //Draw the coord of the mouse on the screen for debugging
-        textSmall.setPosition(5, 5);
-        textSmall.setString("Mouse Position (" + std::to_string(gridX) + ", " + std::to_string(gridY) + ") : " + std::to_string(dsMap[gridX][gridY]));
-        bufferGUI.draw(textSmall);
-        textSmall.setPosition(5, 15);
-        textSmall.setString("View Position (" + std::to_string(viewPos.x) + ", " + std::to_string(viewPos.y) + ")");
-        bufferGUI.draw(textSmall);
+        ////Draw the coord of the mouse on the screen for debugging
+        //textSmall.setPosition(5, 5);
+        ////textSmall.setString("Mouse Position (" + std::to_string(gridX) + ", " + std::to_string(gridY) + ") : " + std::to_string(ds.m_map[ds.m_mapSort[gridX][gridY][0]][ds.m_mapSort[gridX][gridY][1]]) + ", " + std::to_string(ds.m_mapSort[gridX][gridY][0]) + ", " + std::to_string(ds.m_mapSort[gridX][gridY][1]));
+        //textSmall.setString("Mouse Position (" + std::to_string(gridX) + ", " + std::to_string(gridY) + ") : " + std::to_string(ds.m_map[gridX][gridY]));
+        ////bufferGUI.draw(textSmall);
+        //textSmall.setPosition(5, 15);
+        //textSmall.setString("View Position (" + std::to_string(viewGrid.x) + ", " + std::to_string(viewGrid.y) + ")");
+        ////bufferGUI.draw(textSmall);
 
 
         //Move the rectangle to the correct position before drawing
         rectCursor.setPosition(mousePos.x, mousePos.y);
-        bufferGUI.draw(rectCursor);
+        //bufferGUI.draw(rectCursor);
 
+        selectionS.setPosition(winX, winY);
+        //bufferGUI.draw(selectionS);
         
-       
+
+        canvas.draw(rectCursor, 0);
+        canvas.draw(selectionS, 1);
         //----DISPLAY THE STUFF----
         
         //display the buffer on to the window and draw the sprite 
         //on to the window (not really sure how this works honestly)
         bufferMap.display(); 
-        window.draw(bufferSpriteMap);
+        window.draw(sf::Sprite(bufferMap.getTexture()));
 
-        //do the same as above but for the GUI
+
+       
+        ////do the same as above but for the GUI
         bufferGUI.display(); 
-        window.draw(bufferSpriteGUI);
+        window.draw(sf::Sprite(bufferGUI.getTexture()));
 
-        selectionS.setPosition(winX, winY);
-        window.draw(selectionS);
 
-        // Display the window to the screen
-        window.display();
+        //// Display the window to the screen
+        //window.display();
+        canvas.display(window);
     }
+
 
 
 
     //----DEBUGGING OUTPUTS----
 
-    std::cout << "Window Resolution:  " << resPixels.x << " X " << resPixels.y << std::endl;
-    std::cout << "Window Resolution:  "  << std::endl;
+    std::cout << "*****GAME TERMINATED***** " << std::endl;
+
 
     return 0;
 }
