@@ -1,5 +1,3 @@
-#pragma once
-
 #include "display.hpp"
 
 
@@ -8,8 +6,8 @@
 sf::Vector2i windowSetup(sf::RenderWindow& m_window, sf::View& m_view, int m_height, bool m_fullscreen = true, int m_fps = 60)
 {
 	//get the display dimmensions and calculate the aspect ratio
-	float displayWidth = GetSystemMetrics(SM_CXSCREEN);
-	float DisplayHeight = GetSystemMetrics(SM_CYSCREEN);
+	float displayWidth = sf::VideoMode::getDesktopMode().width;
+	float DisplayHeight = sf::VideoMode::getDesktopMode().height;
 	float aspectRatio = displayWidth / DisplayHeight;
 
 	//create a static window width in pixels and calculate the width based on the aspect ratio

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "map.hpp"
 
 Map::Map(int _size)

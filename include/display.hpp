@@ -6,10 +6,6 @@
 #include "SFML/Window.hpp"
 #include "SFML/Audio.hpp"
 
-//General
-#include "wtypes.h"
-#include "winuser.h"
-
 
 //game header files
 #include "constants.hpp"
